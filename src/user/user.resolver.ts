@@ -1,23 +1,24 @@
-import { Post } from '@nestjs/common';
-import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { UserModel } from './user.model';
-import { UserService } from './user.service';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { UserEntity } from 'src/database/entities/user.entity';
+import RepoService from 'src/repo.service';
+import { UserInput } from './user.input';
 
-@Resolver((of) => UserModel)
+@Resolver('User')
 export class UserResolver {
-  constructor(private userService: UserService) {}
+  constructor(private readonly repoService: RepoService) {}
 
-  @Query(() => String)
-  sayHello(): string {
-    return 'Hello World!';
-  }
-  @Query((returns) => UserModel)
-  async author(@Args('username', { type: () => String }) username: string) {
-    return this.userService.findOne(username);
+  @Query(() => [UserEntity])
+  async getUsers(
+    @Args('username', { type: () => String }) username?: string,
+  ): Promise<UserEntity[]> {
+    return await this.repoService.userRepository.find();
   }
 
-  @Mutation((returns) => Post)
-  async upvotePost(@Args({ name: 'postId', type: () => Int }) postId: number) {
-    // return this.userService.upvoteById({ id: postId });
+  @Mutation(() => UserEntity)
+  public async createUser(@Args('data') input: UserInput): Promise<UserEntity> {
+    const userCreated = this.repoService.userRepository.create(input);
+    await this.repoService.userRepository.save(userCreated);
+
+    return userCreated;
   }
 }
