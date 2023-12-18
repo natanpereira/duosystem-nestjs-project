@@ -1,4 +1,5 @@
 import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
+import { ApiResponseProperty } from '@nestjs/swagger';
 import { GraphQLString } from 'graphql';
 import {
   Column,
@@ -18,25 +19,33 @@ export class PatientEntity {
 
   @Column({ type: 'varchar', length: '50' })
   @Field(() => GraphQLString, { nullable: true })
-  name: string;
+  name?: string;
 
   @Column({ type: 'varchar', length: '100' })
   @Field(() => GraphQLString, { nullable: true })
-  email: string;
+  email?: string;
 
   @Column({ type: 'varchar', length: '11' })
   @Field(() => GraphQLString, { nullable: true })
-  cpf: string;
+  cpf?: string;
 
   @DeleteDateColumn()
   @Field(() => GraphQLISODateTime, { nullable: true })
   deleted_at?: Date;
 
-  @Column({ nullable: true })
-  @Field({ nullable: true })
-  medicalHIstory?: string;
+  //TODO: Implement this method
+  // @Column({ nullable: true })
+  // @Field({ nullable: true, defaultValue: [] })
+  // medicalHIstory?: string;
 
   @OneToMany(() => AppointmentEntity, (appointment) => appointment.patient)
   @Field(() => [AppointmentEntity], { nullable: true })
   appointment?: AppointmentEntity[];
+}
+
+export class PatientDeletedResponse {
+  @ApiResponseProperty({
+    example: 'Paciente excluido com suecesso!',
+  })
+  message: string;
 }

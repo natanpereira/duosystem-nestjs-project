@@ -8,7 +8,6 @@ type PatientEntity {
   email: String
   cpf: String
   deleted_at: DateTime
-  medicalHIstory: String
   appointment: [AppointmentEntity!]
 }
 
@@ -31,21 +30,26 @@ type UserEntity {
 }
 
 type Query {
-  getAppointments(name: String!): [AppointmentEntity!]!
-  getPatients(name: String!): [PatientEntity!]!
-  getUsers(username: String!): [UserEntity!]!
+  getUsers(id: ID, username: String): [UserEntity!]!
+  getAppointments(fk_patient: Int, appointment: DateTime, status: Int): [AppointmentEntity!]!
+  getPatients(id: ID, name: String, email: String, cpf: String, deleted_at: DateTime): [PatientEntity!]!
 }
 
 type Mutation {
-  createAppointment(data: AppointmentInput!): AppointmentEntity!
-  createPatient(data: PatientInput!): PatientEntity!
-  createUser(data: UserInput!): UserEntity!
+  createUser(input: UserInput!): UserEntity!
+  createAppointment(input: AppointmentInput!): AppointmentEntity!
+  createPatient(input: PatientInput!): PatientEntity!
+}
+
+input UserInput {
+  username: String
+  password: String
 }
 
 input AppointmentInput {
-  fk_patient: Float!
-  appointment: String!
-  status: Float!
+  fk_patient: Int
+  appointment: DateTime
+  status: Int
 }
 
 input PatientInput {
@@ -53,10 +57,4 @@ input PatientInput {
   email: String!
   cpf: String!
   deleted_at: DateTime
-  medicalHistory: [String!]
-}
-
-input UserInput {
-  username: String!
-  password: String!
 }

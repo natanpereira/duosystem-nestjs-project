@@ -10,7 +10,9 @@ export class AuthService {
   ) {}
 
   async signIn(username, pass) {
-    const user = await this.repoService.userRepository.findOne(username);
+    const user = await this.repoService.userRepository.findOne({
+      where: { username },
+    });
     if (user?.password !== pass) {
       throw new UnauthorizedException();
     }

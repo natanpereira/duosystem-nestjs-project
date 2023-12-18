@@ -10,3 +10,4 @@ const options: TypeOrmModule = {
 };
 
 module.exports = options;
+  

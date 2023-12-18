@@ -6,14 +6,24 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class UserEntity {
   @Field(() => ID, { nullable: true })
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ primaryKeyConstraintName: 'PK_USER', type: 'int' })
   id?: number;
 
   @Field(() => GraphQLString, { nullable: true })
-  @Column()
+  @Column({
+    type: 'varchar',
+    length: 50,
+    nullable: false,
+    comment: 'String contendo alias do usuario',
+  })
   username?: string;
 
   @Field(() => GraphQLString, { nullable: true })
-  @Column()
+  @Column({
+    type: 'varchar',
+    length: 50,
+    nullable: false,
+    comment: 'String contendo a senha do usuario',
+  })
   password?: string;
 }
