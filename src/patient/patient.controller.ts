@@ -10,16 +10,20 @@ import {
   Post,
   Put,
   Res,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
-import { PatientDeletedResponse } from 'src/database/entities/patient.entity';
-import RepoService from 'src/repo.service';
+import { AuthGuard } from '../auth/auth.guard';
+import { PatientDeletedResponse } from '../database/entities/patient.entity';
+import RepoService from '../repo.service';
 import { PatientInput } from './graphql/patient.input';
 import { PatientTransform } from './patient.transform';
 
 @Controller('patient')
 @ApiTags('Patient')
+@UseGuards(AuthGuard)
+@ApiBearerAuth()
 export class PatientController {
   constructor(private readonly repoService: RepoService) {}
 
@@ -32,16 +36,16 @@ export class PatientController {
 
   @Post()
   @ApiResponse({
-    status: HttpStatus.ACCEPTED,
-    description: 'Patient created successfully',
+    status: HttpStatus.CREATED,
+    description: 'Paciente criado com sucesso!',
     type: PatientInput,
   })
   async createPatient(
     @Body(PatientTransform) model: PatientInput,
     @Res() res: Response,
   ) {
-    const patientFind = await this.repoService.userRepository.findOne({
-      where: { username: model.cpf },
+    const patientFind = await this.repoService.patientRepository.findOne({
+      where: { cpf: model.cpf },
     });
 
     if (!!patientFind)
@@ -51,13 +55,13 @@ export class PatientController {
     const patientModel = this.repoService.patientRepository.create(model);
     await this.repoService.patientRepository.save(patientModel);
 
-    return res.status(HttpStatus.ACCEPTED).json(patientModel);
+    return res.status(HttpStatus.CREATED).json(patientModel);
   }
 
   @Put(':patientid')
   @ApiResponse({
     status: 202,
-    description: 'Patient created successfully',
+    description: 'Paciente atualizado com sucesso!',
     type: PatientInput,
   })
   @ApiParam({
@@ -81,15 +85,13 @@ export class PatientController {
         `Não Existe um paciente cadastrado com este id: ${patientid}!`,
       );
 
-    const patientUpdated = await this.repoService.patientRepository.update(
+    await this.repoService.patientRepository.update(
       { id: patientid },
       { ...model },
     );
 
     const patientPersisted = await this.repoService.patientRepository.findOneBy(
-      {
-        id: patientid,
-      },
+      { id: patientid },
     );
 
     return res.status(HttpStatus.ACCEPTED).json(patientPersisted);
@@ -121,10 +123,7 @@ export class PatientController {
         `Não Existe um paciente cadastrado com este id: ${patientid}!`,
       );
 
-    await this.repoService.patientRepository.update(
-      { id: patientid },
-      { deleted_at: new Date() },
-    );
+    await this.repoService.patientRepository.softDelete(patientid);
 
     return res
       .status(HttpStatus.NO_CONTENT)

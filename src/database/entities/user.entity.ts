@@ -1,4 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { ApiResponseProperty } from '@nestjs/swagger';
 import { GraphQLString } from 'graphql';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -26,4 +27,11 @@ export class UserEntity {
     comment: 'String contendo a senha do usuario',
   })
   password?: string;
+}
+
+export class UserDeletedResponse {
+  @ApiResponseProperty({
+    example: 'Usuario excluido com suecesso!',
+  })
+  message: string;
 }

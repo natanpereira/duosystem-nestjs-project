@@ -8,7 +8,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 
@@ -19,13 +19,26 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Login successful!',
+    type: () => ({ username: String, password: String }),
+  })
+  @ApiBody({
+    schema: {
+      example: {
+        username: 'username',
+        password: 'password',
+      },
+    },
+  })
   signIn(@Body() signInDto: Record<string, any>) {
-    console.log(signInDto);
     return this.authService.signIn(signInDto.username, signInDto.password);
   }
 
-  @UseGuards(AuthGuard)
   @Get('profile')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   getProfile(@Request() req) {
     return req.user;
   }

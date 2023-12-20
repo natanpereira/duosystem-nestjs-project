@@ -1,4 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsString,
   IsStrongPassword,
@@ -9,11 +10,21 @@ import { GraphQLString } from 'graphql';
 
 @InputType()
 export class UserInput {
+  @ApiProperty({
+    description: 'Nome do usuario',
+    example: 'newuser',
+    required: true,
+  })
   @Field(() => GraphQLString, { nullable: true })
   @IsString()
   @Length(2, 50)
   readonly username: string;
 
+  @ApiProperty({
+    description: 'Senha do usuario',
+    example: 'Strong@123!',
+    required: true,
+  })
   @Field(() => GraphQLString, { nullable: true })
   @IsString()
   @ValidateIf((o, value) => value !== undefined)

@@ -1,7 +1,7 @@
 import { ConflictException } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { UserEntity } from 'src/database/entities/user.entity';
-import RepoService from 'src/repo.service';
+import { UserEntity } from '../database/entities/user.entity';
+import RepoService from '../repo.service';
 import { UserArgs } from './graphql/user.args';
 import { UserInput } from './graphql/user.input';
 

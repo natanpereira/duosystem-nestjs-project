@@ -13,6 +13,7 @@ async function bootstrap() {
     )
     .setContact(': Send E-mail', '', 'natanj49@gmail.com')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);

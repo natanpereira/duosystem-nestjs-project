@@ -1,4 +1,5 @@
 import { Field, GraphQLISODateTime, ObjectType } from '@nestjs/graphql';
+import { ApiResponseProperty } from '@nestjs/swagger';
 import {
   Column,
   Entity,
@@ -33,4 +34,11 @@ export class AppointmentEntity {
   @ManyToOne(() => PatientEntity)
   @JoinColumn({ name: 'fk_patient' })
   patient?: PatientEntity;
+}
+
+export class AppointmentDeletedResponse {
+  @ApiResponseProperty({
+    example: 'Compromisso cancelado com suecesso!',
+  })
+  message: string;
 }

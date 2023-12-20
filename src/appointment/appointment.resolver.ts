@@ -1,6 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { AppointmentEntity } from 'src/database/entities/appointment.entity';
-import RepoService from 'src/repo.service';
+import { AppointmentEntity } from '../database/entities/appointment.entity';
+import RepoService from '../repo.service';
 import { AppointmentArgs } from './graphql/appointment.args';
 import { AppointmentInput } from './graphql/appointment.input';
 
