@@ -1,0 +1,60 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type PatientEntity {
+  id: ID
+  name: String
+  email: String
+  cpf: String
+  deleted_at: DateTime
+  appointment: [AppointmentEntity!]
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type AppointmentEntity {
+  id: Float
+  fk_patient: Float
+  appointment: DateTime
+  status: Float
+}
+
+type UserEntity {
+  id: ID
+  username: String
+  password: String
+}
+
+type Query {
+  getUsers(id: ID, username: String): [UserEntity!]!
+  getAppointments(fk_patient: Int, appointment: DateTime, status: Int): [AppointmentEntity!]!
+  getPatients(id: ID, name: String, email: String, cpf: String, deleted_at: DateTime): [PatientEntity!]!
+}
+
+type Mutation {
+  createUser(input: UserInput!): UserEntity!
+  createAppointment(input: AppointmentInput!): AppointmentEntity!
+  createPatient(input: PatientInput!): PatientEntity!
+}
+
+input UserInput {
+  username: String
+  password: String
+}
+
+input AppointmentInput {
+  fk_patient: Int
+  appointment: DateTime
+  status: Int
+}
+
+input PatientInput {
+  name: String!
+  email: String!
+  cpf: String!
+  deleted_at: DateTime
+}
