@@ -1,7 +1,6 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import * as csurf from 'csurf';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -20,7 +19,6 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, document);
 
   app.useGlobalPipes(new ValidationPipe());
-  app.use(csurf());
 
   const port = 3000;
   await app.listen(port);
