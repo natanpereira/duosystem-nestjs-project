@@ -1,6 +1,5 @@
 import { Field, GraphQLISODateTime, InputType } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsCPF } from 'brazilian-class-validator';
 import {
   IsEmail,
   IsISO8601,
@@ -41,7 +40,6 @@ export class PatientInput {
     required: true,
   })
   @Field(() => GraphQLString)
-  @IsCPF()
   readonly cpf: string;
 
   @Field(() => GraphQLISODateTime, { nullable: true })
